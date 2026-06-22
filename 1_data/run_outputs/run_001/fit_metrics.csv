@@ -1,0 +1,2 @@
+component_id,role,mean_error_mm,max_error_mm,hausdorff_error_mm,area_error_ratio,n_control_points,n_samples
+0,outer,0.05610523259290395,0.3730449350878099,0.3730449350878099,0.0009489418180443592,56,1796

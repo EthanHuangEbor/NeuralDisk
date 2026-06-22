@@ -1,0 +1,14 @@
+{
+  "rpm": 12000,
+  "omega": 1256.637061,
+  "volume_fraction": 0.5,
+  "Ri": 32.0,
+  "Ro": 168.0,
+  "B": 46.0,
+  "h_hub": 8.0,
+  "h_rim": 10.0,
+  "r_min": 2.5,
+  "eta": 0.5,
+  "n_control_points": 15,
+  "degree": 3
+}

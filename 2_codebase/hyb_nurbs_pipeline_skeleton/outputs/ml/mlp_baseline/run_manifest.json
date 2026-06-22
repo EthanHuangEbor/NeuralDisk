@@ -1,0 +1,8 @@
+{
+  "created_at": "2026-06-12T16:44:57.514136+00:00",
+  "dataset": "data/processed/ml/hyb_nurbs_dataset.npz",
+  "config": "configs/ml/mlp_baseline.yaml",
+  "out_dir": "outputs\\ml\\mlp_baseline",
+  "is_smoke_test": true,
+  "warning": "Smoke test only: this run validates the training code path and does not represent engineering generalization accuracy."
+}

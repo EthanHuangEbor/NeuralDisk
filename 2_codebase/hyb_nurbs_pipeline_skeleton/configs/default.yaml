@@ -1,0 +1,65 @@
+input:
+  node_file: ../../NLIST.lis
+  density_file: ../../export1.txt
+  density_is_node_based: true
+
+units:
+  input_length_unit: m
+  working_length_unit: mm
+  auto_scale_to_mm: true
+
+projection:
+  axes: [x, z]
+  thickness_axis: y
+  mode: aggregate   # aggregate | slice
+  slice_y: null
+  aggregate_density: max  # max | mean | median
+  aggregate_coord: mean
+
+threshold:
+  eta: 0.50
+  adaptive: false
+  min_component_area_mm2: 1.0
+  min_hole_area_mm2: 0.5
+
+boundary:
+  method: tri_iso   # tri_iso | grid_iso | alpha_shape
+  grid_resolution_mm: 0.15
+  smoothing_window: 5
+  resample_spacing_mm: 0.25
+  close_tolerance_mm: 0.10
+  curvature_split_enabled: true
+  corner_angle_deg: 135
+
+nurbs:
+  degree: 3
+  closed_loop_mode: periodic  # periodic | segmented
+  initial_control_spacing_mm: 2.0
+  min_ctrlpts: 6
+  max_ctrlpts: 80
+  weights_mode: fixed_ones  # fixed_ones | optimize
+  lambda_smooth: 1.0e-4
+  fit_tolerance:
+    mean_mm: 0.50
+    max_mm: 1.50
+    area_ratio: 0.03
+  max_refine_iters: 8
+
+export:
+  out_root: ../../outputs
+  out_dir: ../../outputs/run_001
+  write_debug_csv: true
+  write_boundary_json: true
+  write_nurbs_json: true
+  write_plots: true
+  write_apdl_macro: false
+  write_cad: false
+  write_step: false
+  write_iges: false
+  write_stl_preview: false
+
+revolve:
+  enabled: false
+  axis: z
+  angle_deg: 360
+  n_sections: 96

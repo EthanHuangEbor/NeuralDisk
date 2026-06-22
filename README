@@ -1,0 +1,16 @@
+# 目录整理说明
+
+本目录已按用途整理为以下层级：
+
+- `0_比赛/`：比赛、答辩、申报、封面、PPT、PDF、竞赛模板等材料，按时间和比赛/项目名称初步分组。
+- `1_data/`：ANSYS 原始导出和外层运行结果数据。`ansys_raw_export/` 放 `export1.txt`、`NLIST.lis` 等原始导出；`run_outputs/` 放 CSV、JSON、YAML 等运行数据文件。
+- `2_codebase/`：当前代码和后续可迭代代码。`hyb_nurbs_pipeline_skeleton/` 保留为完整代码项目；`latex_report_src/` 为论文/报告 LaTeX 源文件；`docs/` 放算法架构说明等开发文档。
+- `3_figure/`：代码生成图和报告生成图。外层运行生成的图片在 `code_generated_outputs/`，LaTeX 报告原 `figures/` 已归入 `paper_generated/latex_report_figures/`。
+- `4_reference/`：手册、参考资料、非比赛提交类文献。
+- `5_archive/`：压缩包、历史快照和备份包。
+
+后续建议：
+
+- `0_比赛/` 中的比赛材料可以继续按“年份_比赛名_版本/提交阶段”细分。
+- 如果后续 ANSYS 导出增多，可在 `1_data/ansys_raw_export/` 下按工况或日期建子目录。
+- 新增代码项目优先放入 `2_codebase/`，生成的图片优先输出到 `3_figure/`。

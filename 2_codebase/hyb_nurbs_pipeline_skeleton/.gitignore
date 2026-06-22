@@ -1,0 +1,51 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local virtual environments and editor state
+.venv/
+venv/
+.idea/
+.vscode/
+
+# Generated intermediate/processed data
+data/interim/**
+!data/interim/
+!data/interim/README.md
+data/processed/**/*.npz
+data/processed/**/*.csv
+data/processed/**/*.parquet
+data/processed/**/*.pkl
+data/processed/**/*.joblib
+
+# Generated pipeline and ML outputs
+outputs/**
+!outputs/
+!outputs/README.md
+*.pt
+*.pth
+
+# Curated report folders are tracked by README/.gitkeep only.
+reports/**
+!reports/
+!reports/README.md
+!reports/figures/
+!reports/figures/.gitkeep
+!reports/tables/
+!reports/tables/.gitkeep
+
+# Local/private or oversized materials. Keep sensitive identity documents,
+# competition forms, and raw archives outside the public repo.
+private/
+_private/
+secrets/
+.env
+*.env
+*.key
+*.pem
+*.pfx
+*.zip
+*.7z
+*.rar

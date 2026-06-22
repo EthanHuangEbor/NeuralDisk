@@ -1,0 +1,23 @@
+[project]
+name = "hyb-nurbs"
+version = "0.1.0"
+description = "Topology density to NURBS reconstruction pipeline for HYB turbine disk section."
+requires-python = ">=3.10"
+dependencies = [
+  "numpy",
+  "pandas",
+  "scipy",
+  "matplotlib",
+  "pyyaml",
+  "shapely",
+  "scikit-image",
+]
+
+[project.optional-dependencies]
+cad = ["geomdl"]
+ml = ["torch", "numpy", "pandas", "scikit-learn", "matplotlib", "pyyaml", "joblib"]
+test = ["pytest"]
+
+[project.scripts]
+hyb-nurbs = "hyb_nurbs.cli:main"
+hyb-thesis-report = "hyb_nurbs.thesis_report:main"

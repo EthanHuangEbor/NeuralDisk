@@ -1,0 +1,925 @@
+% !TeX program = xelatex
+% ============================================================
+% 第三十六届“冯如杯”竞赛主赛道论文 LaTeX 正文
+% 用法：将本文件放在原模板 src 目录下，与 FRB-style.cls、fonts/、img/ 同级；
+%       若使用真实结果图，请将 figures/ 目录同步放在 src 目录下。
+% 编译：XeLaTeX，建议连续编译两次以生成目录。
+% 注意：全文不得出现作者姓名、学院、专业、指导教师等身份信息。
+% ============================================================
+
+\documentclass{FRB-style}
+
+\usepackage{amsmath,amssymb,bm}
+\usepackage{booktabs,longtable,array,multirow,tabularx,makecell}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{url}
+\usepackage{etoolbox}
+\usepackage{titlesec}
+\usepackage{titletoc}
+
+\def\Fengrubei{北京航空航天大学第三十六届“冯如杯”竞赛主赛道参赛作品}
+
+% -------------------- 规范化设置 --------------------
+% 章、节、条编号：一、；（一）；1、
+\renewcommand{\thesection}{\chinese{section}、}
+\renewcommand{\thesubsection}{（\chinese{subsection}）}
+\renewcommand{\thesubsubsection}{\arabic{subsubsection}、}
+
+\titleformat{\section}[block]
+  {\centering\heiti\zihao{3}\bfseries}{\thesection}{0pt}{}
+\titleformat{\subsection}[block]
+  {\heiti\zihao{4}\bfseries}{\thesubsection}{0pt}{}
+\titleformat{\subsubsection}[block]
+  {\heiti\zihao{-4}\bfseries}{\thesubsubsection}{0pt}{}
+\titlespacing{\section}{0pt}{0.5\baselineskip}{0.5\baselineskip}
+\titlespacing{\subsection}{0pt}{0.5\baselineskip}{0.5\baselineskip}
+\titlespacing{\subsubsection}{0pt}{0.5\baselineskip}{0.5\baselineskip}
+
+% 目录样式：保留二级目录，使用点线连接页码
+\setcounter{tocdepth}{2}
+\titlecontents{section}[0em]{\addvspace{2pt}\heiti}
+  {\contentslabel{3em}}{}{\titlerule*[8pt]{.}\contentspage}
+\titlecontents{subsection}[2em]{\addvspace{2pt}}
+  {\contentslabel{3.6em}}{}{\titlerule*[8pt]{.}\contentspage}
+
+% 图表编号格式：图1  标题；表1  标题
+\DeclareCaptionLabelFormat{zhlabel}{#1#2}
+\DeclareCaptionLabelSeparator{twospace}{\quad}
+\captionsetup[figure]{labelformat=zhlabel,labelsep=twospace,font={small},labelfont=bf,textfont=bf,position=bottom}
+\captionsetup[table]{labelformat=zhlabel,labelsep=twospace,font={small},labelfont=bf,textfont=bf,position=top}
+
+% 参考文献正文标注为上角标
+\let\oldcite\cite
+\renewcommand{\cite}[1]{\textsuperscript{\oldcite{#1}}}
+
+% 前置页无页眉，仅页脚罗马页码；正文页启用规范页眉
+\fancypagestyle{frontplain}{%
+  \fancyhf{}%
+  \cfoot{\zihao{5}\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+}
+\fancypagestyle{bodyplain}{%
+  \fancyhf{}%
+  \chead{{\zihao{-5}\songti \Fengrubei}}%
+  \cfoot{\zihao{5}\thepage}%
+  \renewcommand{\headrulewidth}{0.4pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+}
+
+% 占位图：有真实图则插入，无图则保持可编译占位框
+\newcommand{\placeholderfigure}[1]{%
+  \fbox{\parbox[c][46mm][c]{0.88\textwidth}{\centering #1}}%
+}
+\newcommand{\safeincludegraphics}[3][0.88\textwidth]{%
+  \IfFileExists{#2}{\includegraphics[width=#1]{#2}}{\placeholderfigure{#3}}%
+}
+
+\newcommand{\fronttitle}[1]{%
+  \begin{center}{\heiti\zihao{3}\bfseries #1}\end{center}\vspace{0.5\baselineskip}%
+}
+\newcommand{\codepath}[1]{\texttt{#1}}
+\newcommand{\todo}[1]{\textbf{【待补充：#1】}}
+\renewcommand{\arraystretch}{1.18}
+
+\begin{document}
+
+% ==================== ① 封面 ====================
+\begin{titlepage}
+  \thispagestyle{empty}
+  \vspace*{18pt}
+  \begin{center}
+    \IfFileExists{img/xiaohui.png}{\includegraphics[width=2.3cm]{img/xiaohui.png}\par}{\vspace*{2.3cm}}
+    \vspace{12pt}
+    {\xiaoer\zhongsong 北京航空航天大学\par}
+    \vspace{8pt}
+    {\xiaoer\zhongsong 第三十六届“冯如杯”竞赛主赛道参赛作品\par}
+    \vspace{38pt}
+    {\erhao\bfseries\zhongsong 神经网络辅助的涡轮盘截面优化设计\par}
+    \vspace{12pt}
+    \begin{flushright}
+      {\sanhao\xinwei ——拓扑优化与 NURBS 参数化重构\par}
+    \end{flushright}
+  \end{center}
+  \vfill
+\end{titlepage}
+
+% ==================== ② 题名页 ====================
+\clearpage
+\thispagestyle{empty}
+\vspace*{25pt}
+\begin{center}
+  {\heiti\zihao{3}\bfseries 题名页}\par
+\end{center}
+\vspace{18pt}
+\xiaosi
+\noindent 中文题名：神经网络辅助的涡轮盘截面优化设计——拓扑优化与 NURBS 参数化重构
+
+\vspace{8pt}
+\noindent 英文题名：Neural-Network-Assisted Optimization Design of Turbine Disk Sections: Topology Optimization and NURBS-Based Parametric Reconstruction
+
+\vspace{8pt}
+\noindent 文稿属性：第三十六届“冯如杯”竞赛主赛道参赛作品
+
+\vspace{8pt}
+\noindent 完成状态：已完成 ANSYS 密度文件与节点坐标读取、截面投影、等值边界提取、NURBS/B-spline 参数化重构、几何误差评价及工程化脚本接口；三维有限元再分析闭环与神经网络批量训练仍作为后续工作推进。
+
+% ==================== ③ 中文摘要 ====================
+\clearpage
+\pagenumbering{roman}
+\pagestyle{frontplain}
+\fronttitle{摘要}
+\phantomsection
+\addcontentsline{toc}{section}{摘要}
+
+针对航空发动机涡轮盘二维轴对称截面轻量化设计中“拓扑优化密度结果难以直接转化为可编辑、可验证工程几何”的问题，本文构建了神经网络辅助的涡轮盘截面优化设计流程。研究以体积分数约束下最小柔顺度拓扑优化为主线，将离心载荷作为基础工况，并将热载荷、应力约束与多工况设计作为后续扩展方向。在拓扑结果后处理阶段，本文不直接拟合高密度节点，而是基于密度阈值定义 $\rho=\eta$ 等值边界，通过节点密度读取、X--Z 截面投影、Y 层聚合、Delaunay 三角剖分等值线提取、设计域边界闭合、轮廓有效性修复、弧长重采样和周期 B 样条拟合，实现从 ANSYS 密度场到二维截面参数化边界的自动转换。当前真实算例中，输入节点与密度记录均为 1050 条，聚合后截面点数为 673，阈值取 $\eta=0.50$，边界提取方法为 \codepath{tri\_iso}。最新工程脚本在控制点压缩后得到三次周期 B 样条曲线，控制点数为 15，平均拟合误差为 0.3341 mm，最大拟合误差为 1.4429 mm，面积相对误差为 0.9908\%。在软件实现上，已形成 \codepath{NodeDensityTable -> SectionCloud -> BoundaryLoop -> FitResult -> exporters} 的模块接口，并完成配置合并、运行清单、APDL/STEP/IGES/STL 预览接口和论文图表自动导出命令。本文进一步提出以工况参数和约束参数为输入、以 NURBS 控制点或等价几何参数为输出的 MLP 回归模型框架，用于后续多工况近优截面的快速预测。研究结果表明，拓扑优化密度场经边界提取与 NURBS 参数化后可转化为低维、可编辑、可复现的几何表达，为涡轮盘截面优化结果的工程化建模、再分析和数据驱动快速设计提供了基础。
+
+\noindent\textbf{关键词：}涡轮盘截面，拓扑优化，离心载荷，NURBS，参数化重构，神经网络代理模型，有限元再分析
+
+% ==================== ④ 英文摘要 ====================
+\clearpage
+\fronttitle{Abstract}
+\phantomsection
+\addcontentsline{toc}{section}{Abstract}
+
+A major difficulty in the lightweight design of aero-engine turbine disk sections is that topology optimization usually produces a density field rather than an editable and verifiable engineering geometry. This paper develops a neural-network-assisted design framework for turbine disk sections, following the route of topology optimization, contour extraction, NURBS-based parametric reconstruction, revolving reanalysis, and rapid surrogate prediction. A volume-fraction-constrained minimum-compliance formulation is used as the baseline topology optimization model. Centrifugal loading is treated as the primary load case, while thermal loading, stress constraints, and multi-condition design are retained as extensible modules. In the post-processing stage, the proposed method does not directly fit high-density nodes. Instead, the material boundary is defined by the density iso-contour $\rho=\eta$. The pipeline reads nodal coordinates and topology densities, projects the data onto the X--Z section, aggregates multiple Y layers, extracts the iso-contour using Delaunay triangulation, closes domain-boundary segments, repairs polygon validity, resamples the contour by arc length, and fits a periodic cubic B-spline, which is a special case of NURBS with unit weights. In the current real case, 1050 nodes and 1050 density records are merged, 673 section points are obtained after projection, the threshold is set to $\eta=0.50$, and the contour extraction method is \codepath{tri\_iso}. After control-point compression, the fitted curve has 15 control points, with a mean fitting error of 0.3341 mm, a maximum fitting error of 1.4429 mm, and an area error ratio of 0.9908\%. The software implementation has formed a reproducible interface chain of \codepath{NodeDensityTable -> SectionCloud -> BoundaryLoop -> FitResult -> exporters}, including configuration merging, run manifests, APDL/STEP/IGES/STL preview interfaces, and thesis-report generation. A subsequent MLP regression model is formulated to map operating and constraint parameters to NURBS control points or equivalent geometric parameters for rapid near-optimal design. The results show that the density-field output of topology optimization can be transformed into a low-dimensional, editable, and reproducible geometric representation, providing a basis for engineering reconstruction, finite element reanalysis, and data-driven rapid design of turbine disk sections.
+
+\noindent\textbf{Keywords:} turbine disk section; topology optimization; centrifugal load; NURBS; parametric reconstruction; neural-network surrogate; finite element reanalysis
+
+% ==================== ⑤ 目录 ====================
+\clearpage
+\tableofcontents
+
+% ==================== ⑥ 图表清单及主要符号表 ====================
+\clearpage
+\fronttitle{图表清单及主要符号表}
+\phantomsection
+\addcontentsline{toc}{section}{图表清单及主要符号表}
+
+\noindent\textbf{图表清单}
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.16\textwidth}>{\raggedright\arraybackslash}p{0.74\textwidth}}
+图1 & 技术路线图 \\
+图2 & 涡轮盘截面与设计域示意图 \\
+图3 & 当前真实算例密度云图 \\
+图4 & 边界轮廓提取与 NURBS 拟合流程图 \\
+图5 & $\rho=\eta$ 边界提取叠加图 \\
+图6 & NURBS/B-spline 重构截面叠加图 \\
+图7 & 神经网络模型结构图 \\
+图8 & 再分析验证流程图 \\
+表1 & 近年相关研究对比 \\
+表2 & 拓扑优化模型参数与当前状态 \\
+表3 & 载荷与边界条件设置 \\
+表4 & 当前真实算例数据与后处理设置 \\
+表5 & NURBS/B-spline 拟合参数与误差 \\
+表6 & 神经网络训练参数建议 \\
+表7 & 再分析结果对比框架 \\
+表8 & 方法优缺点总结 \\
+\end{longtable}
+
+\vspace{0.5em}
+\noindent\textbf{主要符号表}
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.72\textwidth}}
+\toprule
+符号 & 含义 \\
+\midrule
+$\Omega$ & 拓扑优化设计域 \\
+$\Omega_s$ & 阈值分割后的保留材料区域 \\
+$\rho_e$ & 第 $e$ 个单元的相对密度 \\
+$\rho(\mathbf{x})$ & 连续密度场近似函数 \\
+$E_0$ & 实体材料弹性模量 \\
+$E_{\min}$ & 避免刚度矩阵奇异的小弹性模量 \\
+$p$ & SIMP 惩罚指数或曲线次数，具体含义由上下文确定 \\
+$v_e$ & 第 $e$ 个单元体积或截面面积权重 \\
+$f_v$ & 体积分数上限 \\
+$\mathbf{K}$ & 总体刚度矩阵 \\
+$\mathbf{U}$ & 位移向量 \\
+$\mathbf{F}_c$ & 离心载荷等效节点力 \\
+$\omega$ & 角速度 \\
+$\eta$ & 密度阈值 \\
+$\Gamma_\eta$ & 密度等值轮廓 \\
+$\mathbf{q}_k$ & 第 $k$ 个重采样边界点 \\
+$\hat{\mathbf{q}}_k$ & 拟合曲线上与 $\mathbf{q}_k$ 对应的最近点 \\
+$\mathbf{P}_i$ & 第 $i$ 个 NURBS/B-spline 控制点 \\
+$w_i$ & 第 $i$ 个 NURBS 权因子 \\
+$N_{i,p}(u)$ & $p$ 次 B 样条基函数 \\
+$\mathbf{x}$ & 神经网络输入向量 \\
+$\mathbf{z}$ & 截面参数向量或控制点向量 \\
+$\mathcal{F}_{\theta}$ & 参数为 $\theta$ 的 MLP 回归模型 \\
+\bottomrule
+\end{longtable}
+
+% ==================== ⑦ 主体部分 ====================
+\clearpage
+\pagenumbering{arabic}
+\pagestyle{bodyplain}
+
+\section{绪论}
+
+\subsection{研究背景与问题提出}
+
+涡轮盘是航空发动机转子系统中的关键承力构件，其结构方案同时受到转动惯量、离心载荷、应力水平、刚度要求、材料利用率与制造实现性的共同制约。与传统经验迭代设计相比，拓扑优化能够在给定设计域内识别更有效的载荷传递路径，因此已成为涡轮盘轻量化与高承载结构概念设计的重要工具。近年围绕涡轮盘及相关旋转盘体的拓扑优化研究，重点集中于设计相关离心载荷、应力约束、热--力耦合、多材料设计以及拓扑优化与形状优化的联合策略，主流仍是有限元驱动的高可信计算框架，而非脱离物理求解的纯数据映射\cite{Song2022,Yan2023,Meng2024,Wang2025,Yan2025MM}。
+
+本文研究对象限定为涡轮盘二维轴对称截面。该问题具有两个显著特点：其一，离心载荷是基础工况，且随半径和材料分布变化；其二，拓扑优化直接输出的是密度分布或保留区域，而工程设计、三维建模与再分析所需要的是连续、可编辑、可控的参数化几何。前者决定了问题必须建立在有限元与结构力学模型之上，后者则要求在拓扑优化结果与工程几何之间建立可靠的后处理链路。
+
+\subsection{工程难点与研究问题定义}
+
+当前工程难点并不在于能否在 ANSYS 中获得拓扑优化密度云图，而在于如何将该结果稳定转化为可建模、可编辑、可复现、可再分析的参数化截面。若仅将问题表述为“导出全部节点”，则会忽略拓扑优化结果中的灰区、非边界点、网格依赖边界以及局部孤立材料岛等实际问题。对于涡轮盘截面设计，更合理的技术表述应为“拓扑边界轮廓提取与参数化重构”。
+
+因此，本文将核心研究问题定义为：在 ANSYS 生成的涡轮盘截面拓扑优化结果基础上，建立“节点密度读取--截面投影--等值轮廓提取--边界闭合与修复--弧长重采样--NURBS/B-spline 拟合--三维再分析接口”的工程化流程，并进一步将该流程压缩为低维参数化表示，使神经网络能够学习工况/约束参数与近优截面参数之间的映射关系。
+
+\subsection{研究内容与技术路线}
+
+本文技术路线如图1所示，主要包括六个环节：在 ANSYS 中建立涡轮盘二维轴对称截面模型并完成基础工况下的拓扑优化求解；基于密度阈值和等值轮廓思想提取保留材料区域边界；对轮廓点进行排序、闭合、有效性修复、分段与重采样；采用 NURBS/B-spline 曲线完成边界拟合和低维参数化表达；通过旋转建模与 APDL/CAD 接口进入有限元再分析；基于批量样本建立 MLP 回归网络，实现从工况参数和约束参数到近优截面参数向量的快速预测。
+
+\begin{figure}[H]
+\centering
+\placeholderfigure{ANSYS 建模 $\rightarrow$ 截面拓扑优化 $\rightarrow$ 密度与节点导出 $\rightarrow$\newline 边界识别与轮廓提取 $\rightarrow$ NURBS 参数化重构 $\rightarrow$\newline 三维旋转建模与再分析 $\rightarrow$ 数据集构建 $\rightarrow$ MLP 快速预测}
+\caption{技术路线图}
+\end{figure}
+
+\subsection{本文定位、创新点与当前进展说明}
+
+本文定位是“神经网络辅助的参数化重构与快速设计框架”，而不是“以神经网络替代有限元拓扑优化求解器”。这一定位与近年人工智能辅助拓扑优化研究的审慎结论一致：神经网络更适合作为局部环节加速器、代理模型或后处理辅助模型，而高可信的载荷--应力--位移响应仍需由有限元框架支撑\cite{Woldseth2022,Shin2023,Chen2024review,Persia2025}。
+
+本文的主要工作点包括：第一，面向涡轮盘截面建立 ANSYS 拓扑优化结果到 NURBS 参数化边界的自动化后处理流程；第二，将密度结果中的边界几何压缩为控制点、节点矢量、权重和误差指标构成的低维几何标签；第三，形成配置解析、运行清单、图表导出、APDL/CAD 接口和测试指标组成的可复现软件框架；第四，为后续神经网络快速预测建立“工况/约束参数--几何参数向量”的数据接口。
+
+截至当前进度，已完成真实节点密度数据的读取与合并、X--Z 截面投影、Y 层聚合、\codepath{tri\_iso} 等值边界提取、边界闭合与段标签、\codepath{shapely} 有效性修复、周期 B 样条与分段曲线拟合、几何误差评价、配置合并、运行清单输出以及论文图表自动导出。尚未完成的内容包括：基于真实单元连接的 \codepath{mesh\_iso} 全流程验证、CAD 实体级 STEP/IGES 导出校核、三维有限元再分析结果回读和神经网络批量训练。
+
+\section{文献综述}
+
+\subsection{涡轮盘拓扑优化研究进展}
+
+拓扑优化在航空发动机盘类结构中的应用，近年呈现出三个特点。其一，研究对象由简化盘体逐步扩展到双腹板盘、盘轴组合体和双合金盘等更接近工程真实的结构；其二，约束条件由单一体积约束逐步扩展到最大应力、位移、疲劳寿命以及热--力耦合条件；其三，方法上仍以密度法、演化法及其与形状优化的联用为主，少数工作开始引入 CAD 兼容表达和多材料设计\cite{Song2022,Yan2023,Meng2024,Wang2025,Yan2025MM,Meng2023CN}。
+
+\begin{table}[H]
+\centering
+\caption{近年相关研究对比}
+\small
+\begin{tabularx}{\textwidth}{p{0.10\textwidth}p{0.20\textwidth}p{0.18\textwidth}p{0.24\textwidth}X}
+\toprule
+年份 & 文献 & 研究对象 & 方法特征 & 对本文的启示 \\
+\midrule
+2022 & Song 等\cite{Song2022} & 双腹板涡轮盘 & BESO 与形状优化串联 & 盘类截面可采用拓扑优化与样条拟合联合策略 \\
+2023 & Yan 等\cite{Yan2023} & 涡轮盘 & 离心载荷下应力预测与约束 & 离心载荷与应力控制是盘类结构关键问题 \\
+2023 & 孟子皓等\cite{Meng2023CN} & 涡轮盘 & BESO 方法研究 & 可作为国内盘类拓扑优化方法参考 \\
+2024 & Meng 等\cite{Meng2024} & 三维涡轮盘 & BESO，考虑热载荷 & 热载荷可作为后续扩展工况 \\
+2024 & Urso 等\cite{Urso2024DDL,Urso2024TM} & 设计相关载荷/热力耦合 & 基于 NURBS 实体的优化 & NURBS 适合作为低维几何表达工具 \\
+2025 & Wang 等\cite{Wang2025} & 盘轴旋转体 & 热--力耦合、应力约束 & 温度场会影响最终拓扑形式 \\
+2025 & Feng 等\cite{Feng2025} & 一般 TO 结果 & 自动重构可编辑 CAD & 支持优化结果到 CAD 的桥接思路 \\
+2025 & Persia 等\cite{Persia2025} & TO 后处理结构 & 神经网络代理模型 & 支持将神经网络定位为后处理辅助模型 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+由表1可见，近年研究前沿已由“能否做拓扑优化”转向“如何处理设计相关载荷、应力控制、热--力耦合、多材料与 CAD 兼容后处理”等更接近工程应用的问题。
+
+\subsection{设计相关离心载荷与热力耦合问题}
+
+对于旋转结构而言，离心载荷并非普通固定外载，而是随结构半径、材料分布和保留区域变化而变化的设计相关载荷。Chen 与 Kikuchi 以及 Bourdin 与 Chambolle 对设计相关载荷拓扑优化给出了较早的理论讨论；Han 等进一步指出，自重、离心力与附加加速度等惯性载荷会显著影响拓扑形式\cite{Chen2001,Bourdin2003,Han2021}。对盘类结构而言，离心载荷的处理不能被视作普通静载等效替代，而应在模型层面体现其设计相关性。
+
+热--力耦合则是另一条重要方向。Wang 等在盘轴旋转体研究中指出，考虑离心载荷下的热--力耦合后，合适的应力约束对获得合理拓扑至关重要，且即使热应力占总应力比例相对较小，也会显著影响最终优化构型\cite{Wang2025}。本文出于基础算例可实现性考虑，以离心载荷下的截面拓扑优化为主线，热载荷作为后续扩展项。
+
+\subsection{NURBS 参数化与 CAD 重构研究进展}
+
+拓扑优化结果向参数化 CAD 模型的转换，是当前工程应用中的薄弱环节之一。Amroune 等指出，从拓扑优化结果自动生成参数化 CAD 模型仍具有较大挑战；Feng 等进一步提出自动重构流程，用于将三维拓扑结果转化为可编辑 CAD 模型\cite{Amroune2022,Feng2025,Ren2025}。这类研究说明，后处理不是简单几何描边，而是决定优化结果能否进入设计闭环的关键步骤。
+
+在几何表达层面，NURBS 适合用于拓扑优化后处理，原因在于其具有局部支撑、低维控制和 CAD 兼容等特征。Montemurro 与 Refai 指出，NURBS 超曲面可减少设计变量数量，并使优化边界更容易转化为 CAD 几何；Urso 等又将 NURBS 实体拓展到设计相关载荷和热--力耦合问题，表明 NURBS 不仅是几何后处理工具，也具有与优化框架深度耦合的潜力\cite{Montemurro2021,Urso2024DDL,Urso2024TM}。国内相关研究也关注拓扑优化结果的参数化重构，金栢成等针对曲面加筋结构提出的“拓扑结果--边界特征提取--样条拟合--几何恢复”技术链对本文具有借鉴意义\cite{Jin2024}。
+
+\subsection{神经网络辅助拓扑优化研究进展}
+
+人工智能辅助拓扑优化是近年增长较快的方向，但其作用边界需要审慎界定。Woldseth 等指出，尽管人工智能方法在拓扑优化领域受到广泛关注，但真正具有决定性突破的工作仍然有限，过度依赖无求解器直接预测容易导致对模型能力的误判\cite{Woldseth2022}。Shin 等系统梳理了机器学习与深度学习在拓扑优化中的主要应用路径，包括全局代理、局部环节加速和多尺度设计等\cite{Shin2023}。
+
+从应用形态看，现有神经网络辅助方法大致可分为三类：直接预测密度分布或结构拓扑的全局代理模型；对灵敏度、目标函数或局部迭代过程进行替代和加速的子模块模型；面向后处理、参数修正和设计空间压缩的代理模型\cite{Deng2022,Kong2024,Rastegarzadeh2023,Chandrasekhar2023,Persia2025}。陈小前等指出，全局代理虽然研究较多，但其计算性与泛化性仍存在限制，局部子环节加速与替代更具灵活性\cite{Chen2024review}。因此，本文更适合将神经网络定位为低维参数化几何的快速预测器，而非直接输出高维拓扑密度图。
+
+\subsection{现有研究不足与本文切入点}
+
+综上，现有研究已在涡轮盘拓扑优化、设计相关离心载荷处理、NURBS/CAD 兼容重构以及神经网络加速方面形成基础，但仍存在三方面缺口：针对涡轮盘二维截面的“拓扑优化结果--边界轮廓--参数化几何--三维再分析”全流程衔接缺少面向具体工程对象的实现细节；拓扑结果向可建模几何的转换往往停留在概念性后处理，没有形成明确的低维参数向量定义；神经网络与盘类截面设计的结合常见于宏观综述，针对“工况/约束--NURBS 控制点”的轻量化代理框架仍有实现空间。本文即在上述缺口上展开工作。
+
+\section{涡轮盘截面拓扑优化模型建立}
+
+\subsection{设计对象与基本假设}
+
+本文研究对象为航空发动机涡轮盘二维轴对称截面。为兼顾工程真实性与当前阶段实现难度，采用如下建模假设：涡轮盘在基础阶段按二维轴对称连续体处理，研究其子午面截面拓扑特征；材料在基础算例中视为各向同性线弹性体；基础工况包含离心载荷，热载荷作为拓展工况通过可开关项处理；拓扑优化阶段以截面刚度最优和体积分数约束为主，最大等效应力与最大位移主要用于再分析评价与后续扩展约束；设计域、非设计域、中心孔保留区和外缘保留区随 ANSYS 模型进一步冻结。
+
+\begin{figure}[H]
+\centering
+\placeholderfigure{中心孔、轮缘、腹板候选区域、非设计域与轴线示意}
+\caption{涡轮盘截面与设计域示意图}
+\end{figure}
+
+\subsection{设计变量与材料插值模型}
+
+设设计域 $\Omega$ 被离散为 $n$ 个有限元单元，单元相对密度为 $\rho_e\in[\rho_{\min},1]$。采用 SIMP 材料插值模型，则第 $e$ 个单元的等效弹性模量表示为
+\begin{equation}
+E_e(\rho_e)=E_{\min}+\rho_e^p(E_0-E_{\min}),\quad e=1,2,\cdots,n.
+\end{equation}
+式中，$E_0$ 为实体材料弹性模量，$E_{\min}$ 为避免刚度矩阵奇异而引入的小刚度，$p$ 为惩罚指数。对于当前工程实现，$p=3$ 可作为初始设置\cite{Bendsoe2003,Sigmund2001,Xia2018}。
+
+为抑制棋盘格与网格依赖，可引入密度过滤或灵敏度过滤。本文建议采用基于邻域加权的密度过滤：
+\begin{equation}
+\tilde{\rho}_e=\frac{\sum_{j\in\mathcal{N}_e}w_{ej}\rho_j}{\sum_{j\in\mathcal{N}_e}w_{ej}},\qquad
+w_{ej}=\max(0,r_f-d_{ej}).
+\end{equation}
+式中，$\mathcal{N}_e$ 为单元 $e$ 的过滤邻域，$r_f$ 为过滤半径，$d_{ej}$ 为单元 $e$ 与单元 $j$ 中心之间的距离。
+
+\subsection{目标函数与约束条件}
+
+结合当前项目进度与 ANSYS 工程实现的稳妥性，本文选择体积分数约束下最小柔顺度作为截面拓扑优化主线。该主线目标函数稳定，有限元实现成熟，能够给出主要载荷路径，并为后续边界提取和参数化重构提供清晰材料分布。优化模型写为
+\begin{equation}
+\min_{\rho}\; C(\rho)=\mathbf{U}^{T}\mathbf{K}(\tilde{\rho})\mathbf{U},
+\end{equation}
+满足平衡方程
+\begin{equation}
+\mathbf{K}(\tilde{\rho})\mathbf{U}=\mathbf{F}_c(\tilde{\rho},\omega)+\mathbf{F}_{ext}+\mathbf{F}_{T},
+\end{equation}
+体积分数约束为
+\begin{equation}
+\frac{\sum_{e=1}^{n}\rho_e v_e}{\sum_{e=1}^{n}v_e}\leq f_v,
+\end{equation}
+设计变量上下界为
+\begin{equation}
+\rho_{\min}\leq\rho_e\leq1.
+\end{equation}
+需要说明的是，本文当前主线不采用应力约束轻量化作为首个算例，并不意味着应力问题不重要。最大等效应力将在再分析阶段作为核心评价指标，待基础流程打通后再考虑将应力约束显式并入优化主问题。
+
+\subsection{离心载荷边界条件与 ANSYS 求解流程}
+
+对于旋转盘类结构，离心载荷本质上是与半径和材料分布耦合的体载荷，可写为
+\begin{equation}
+\mathbf{b}_c(r)=\rho_m\omega^2 r\,\mathbf{e}_r,
+\end{equation}
+其中，$\rho_m$ 为材料密度，$\omega$ 为角速度，$r$ 为点到旋转轴的距离，$\mathbf{e}_r$ 为径向单位向量。对应单元等效节点力可写为
+\begin{equation}
+\mathbf{f}_{c,e}=\int_{\Omega_e}\rho_e\mathbf{N}^{T}\rho_m\omega^2 r\mathbf{e}_r\,\mathrm{d}\Omega.
+\end{equation}
+其中，$\mathbf{N}$ 为单元形函数矩阵。离心载荷与材料分布相互耦合，因此属于典型设计相关载荷\cite{Chen2001,Bourdin2003,Han2021}。
+
+\begin{table}[H]
+\centering
+\caption{拓扑优化模型参数与当前状态}
+\begin{tabularx}{\textwidth}{p{0.16\textwidth}p{0.24\textwidth}X}
+\toprule
+参数类别 & 参数名称 & 当前取值或状态 \\
+\midrule
+几何 & 中心孔、轮缘与腹板候选区 & 已在 ANSYS 基础模型中定义，最终尺寸随设计域冻结 \\
+材料 & 弹性模量 $E_0$、泊松比 $\nu$、密度 $\rho_m$ & 基础算例采用线弹性各向同性材料，最终牌号参数待统一 \\
+优化 & 惩罚指数 $p$ & 建议初值为 3 \\
+优化 & 最小密度 $\rho_{\min}$ & 建议初值为 $10^{-3}$ \\
+优化 & 体积分数 $f_v$ & 由 ANSYS 拓扑优化算例给定，后续可作为样本输入变量 \\
+优化 & 过滤半径 $r_f$ & 随网格尺寸和最小构件尺度确定 \\
+后处理 & 密度阈值 $\eta$ & 当前真实算例取 0.50 \\
+后处理 & 截面投影方式 & X--Z 投影，Y 层采用 max 聚合 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{载荷与边界条件设置}
+\begin{tabularx}{\textwidth}{p{0.18\textwidth}p{0.24\textwidth}X}
+\toprule
+类别 & 内容 & 当前状态 \\
+\midrule
+旋转工况 & 角速度 $\omega$ 或转速 $n$ & 基础工况已采用离心载荷，具体数值随 ANSYS 算例记录 \\
+基础载荷 & 离心载荷 & 已纳入拓扑优化主线 \\
+热载荷 & 温度场/温差/热边界 & 作为后续扩展项，当前不报告热--力耦合结果 \\
+约束方式 & 内孔、安装区与非设计域约束 & 已确定需保留安装功能区，边界细节随模型冻结 \\
+分析类型 & 二维轴对称静力分析 & 当前基础算例采用该分析类型 \\
+输出量 & 密度分布、节点坐标、几何重构结果 & 已完成节点密度表与节点坐标导出，已形成 NURBS 拟合结果 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+本文拟采用的 ANSYS 实施流程为：建立二维轴对称几何与设计域划分；设置材料、旋转工况和边界条件；划分网格；执行体积分数约束下的拓扑优化求解；导出节点坐标与密度场；对密度结果进行阈值后处理并转入边界提取模块。当前真实导出文件已经实现节点编号完整匹配，为后续几何重构提供了数据基础。
+
+\section{拓扑边界轮廓提取与 NURBS 参数化重构}
+
+\subsection{问题定义与工程限制}
+
+从工程角度看，ANSYS 拓扑优化的直接输出通常是密度场、等值云图或保留区域，而非可直接制造或可直接编辑的几何实体。若简单导出全部节点，将面临三类问题：节点集合中混杂内部点、非边界点和灰区点，无法直接代表实体边界；网格依赖会使边界呈现锯齿状，不利于后续三维建模；局部孤立材料岛、细长悬枝与数值伪特征会降低几何重建稳定性\cite{Amroune2022,Feng2025,Ren2025}。
+
+因此，本文不采用直接拟合高密度节点的后处理主线，而采用基于拓扑密度阈值和保留区域边界识别的轮廓点提取与 NURBS 参数化重构路径。
+
+\subsection{数据读取与截面投影}
+
+当前真实算例中，密度文件为节点编号到拓扑密度的映射，节点编号范围为 1--1050；节点坐标文件同样包含 1050 个节点。程序首先按 \codepath{node\_id} 合并节点坐标和拓扑密度，并将坐标单位统一转换为 mm。由于节点存在多个 Y 层，本文第一阶段采用 X--Z 截面投影，并以 max 方式对 Y 层密度聚合。该策略偏向保守保留材料，即同一投影位置只要任一 Y 层密度较高，则该截面点保留较高材料密度。聚合后当前截面点数为 673。
+
+\begin{figure}[H]
+\centering
+\safeincludegraphics[0.80\textwidth]{figures/density_cloud.png}{当前真实算例密度云图待插入}
+\caption{当前真实算例密度云图}
+\end{figure}
+
+\subsection{轮廓点提取与边界排序}
+
+记拓扑优化后的连续密度场近似为 $\rho(\mathbf{x})$。取阈值 $\eta\in(\rho_{\min},1)$，定义保留材料区域为
+\begin{equation}
+\Omega_s=\{\mathbf{x}\in\Omega\mid\rho(\mathbf{x})\geq\eta\},
+\end{equation}
+相应的轮廓边界由等值线给出：
+\begin{equation}
+\Gamma_\eta=\{\mathbf{x}\in\Omega\mid\rho(\mathbf{x})=\eta\}.
+\end{equation}
+
+当前代码保留 \codepath{tri\_iso}、\codepath{grid\_iso} 与 \codepath{mesh\_iso} 三类接口。其中，\codepath{tri\_iso} 基于 Delaunay 三角剖分对散点密度进行线性插值并提取 $\rho=\eta$ 等值线；\codepath{grid\_iso} 通过规则网格与边界闭合增强处理等值线；\codepath{mesh\_iso} 预留给基于 ANSYS 单元连接关系的真实网格边界提取。对于本次真实数据，已采用 \codepath{tri\_iso} 路线完成边界提取。
+
+当材料区域与设计域边界接触时，内部等值线可能不是天然闭合曲线。当前工程脚本通过 \codepath{convex\_hull\_closure} 和 \codepath{grid\_boundary\_closure} 等段标签标记由设计域边界补齐的闭合段，并通过 \codepath{shapely polygonize}、有效性修复、连通域过滤和方向统一得到有效边界环。需要强调的是，这类闭合段代表设计域或保留域边界，不应被误解为内部密度等值线。
+
+\begin{figure}[H]
+\centering
+\placeholderfigure{密度场 $\rightarrow$ 截面投影 $\rightarrow$ $\rho=\eta$ 等值线提取 $\rightarrow$\newline 设计域边界闭合 $\rightarrow$ 有效性修复 $\rightarrow$ 弧长重采样 $\rightarrow$ NURBS/B-spline 拟合}
+\caption{边界轮廓提取与 NURBS 拟合流程图}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\safeincludegraphics[0.80\textwidth]{figures/boundary_overlay.png}{$\rho=\eta$ 边界提取叠加图待插入}
+\caption{$\rho=\eta$ 边界提取叠加图}
+\end{figure}
+
+提取到的原始轮廓点经排序后得到按弧长单调的曲线点列，并按统一弧长间隔 $\Delta s$ 重采样为 $\{\bar{\mathbf{q}}_k\}_{k=1}^{\bar M}$。该步骤的目的在于消除局部点密度不均导致的拟合偏置，并为不同样本之间建立统一的几何表达基础。当前真实算例边界重采样点数为 449。
+
+\subsection{NURBS 曲线拟合与参数化表达}
+
+设控制点为 $\mathbf{P}_i$，权因子为 $w_i$，节点矢量为 $\mathbf{U}=[u_0,u_1,\cdots,u_{m+p+1}]$，则 $p$ 次 NURBS 曲线可写为
+\begin{equation}
+\mathbf{C}(u)=\frac{\sum_{i=0}^{m}N_{i,p}(u)w_i\mathbf{P}_i}{\sum_{i=0}^{m}N_{i,p}(u)w_i},\quad u\in[0,1].
+\end{equation}
+其中，$N_{i,p}(u)$ 为 $p$ 次 B 样条基函数\cite{Piegl1997}。当所有权因子均为 1 时，NURBS 退化为非有理 B 样条。当前真实算例采用单位权重，因此数学上属于 NURBS 的 B-spline 特例。
+
+设重采样后的轮廓点为 $\mathbf{q}_k$，拟合曲线上最近点为 $\hat{\mathbf{q}}_k$，则平均拟合误差、最大拟合误差和面积相对误差分别定义为
+\begin{equation}
+e_{\mathrm{avg}}=\frac{1}{M}\sum_{k=1}^{M}\|\mathbf{q}_k-\hat{\mathbf{q}}_k\|_2,
+\end{equation}
+\begin{equation}
+e_{\max}=\max_{1\leq k\leq M}\|\mathbf{q}_k-\hat{\mathbf{q}}_k\|_2,
+\end{equation}
+\begin{equation}
+\delta_A=\frac{|A_{\mathrm{fit}}-A_{\mathrm{topo}}|}{A_{\mathrm{topo}}}.
+\end{equation}
+
+\begin{table}[H]
+\centering
+\caption{当前真实算例数据与后处理设置}
+\begin{tabularx}{\textwidth}{p{0.32\textwidth}X}
+\toprule
+项目 & 当前结果 \\
+\midrule
+节点坐标记录数 & 1050 \\
+拓扑密度记录数 & 1050 \\
+节点编号匹配状态 & 1--1050 完整匹配 \\
+截面投影方式 & X--Z 投影 \\
+Y 层聚合方式 & max 聚合 \\
+聚合后截面点数 & 673 \\
+密度阈值 $\eta$ & 0.50 \\
+边界提取方法 & \codepath{tri\_iso} \\
+边界闭合策略 & 设计域接触处采用闭合段标签记录 \\
+边界重采样点数 & 449 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{NURBS/B-spline 拟合参数与误差}
+\begin{tabularx}{\textwidth}{p{0.32\textwidth}X}
+\toprule
+项目 & 当前结果 \\
+\midrule
+曲线次数 $p$ & 3 \\
+拟合模式 & periodic B-spline；单位权重 NURBS 特例 \\
+控制点数 & 15 \\
+权因子设置 & 全部固定为 1 \\
+平均拟合误差 $e_{\mathrm{avg}}$ & 0.3341 mm \\
+最大拟合误差 $e_{\max}$ & 1.4429 mm \\
+Hausdorff 误差 & 1.4429 mm \\
+面积相对误差 $\delta_A$ & 0.9908\% \\
+测试状态 & \codepath{python -B -m pytest -q -p no:cacheprovider}，5 passed \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+表5表明，在当前控制点压缩策略下，重构曲线以 15 个控制点表达截面边界，面积相对误差低于 1\%。平均误差与最大误差相对早期 56 控制点拟合版本有所增大，但控制点数量显著减少，更适合作为后续神经网络输出标签。后续可在控制点数量、分段方式与再分析误差之间进行折中选择。
+
+\begin{figure}[H]
+\centering
+\safeincludegraphics[0.80\textwidth]{figures/nurbs_fit_overlay.png}{原始轮廓点、控制多边形与 NURBS/B-spline 拟合曲线叠加图待插入}
+\caption{NURBS/B-spline 重构截面叠加图}
+\end{figure}
+
+\subsection{二维截面到三维盘体的重建与再分析接口}
+
+对拟合完成的二维截面曲线沿旋转轴进行 $360^\circ$ 旋转，可获得三维涡轮盘实体几何。该过程的意义在于：拓扑优化给出的是概念结构路径，而三维旋转重建与再分析用于检验该路径能否在真实几何模型中保留相近的质量、应力和位移特征。
+
+当前代码已补充 APDL polyline 宏、STEP/IGES 导出接口和旋转 STL 预览接口。其中，STL 文件仅作为 \codepath{revolved\_surface\_preview.stl} 用于形状预览，不应替代工程级参数化 CAD 实体。后续需要继续完成基于 CAD kernel 的 STEP/IGES 实体导出、ANSYS 材料与网格设置、载荷与边界条件复现、求解结果回读和质量--应力--位移对比。
+
+\section{神经网络辅助快速设计模型}
+
+\subsection{数据集构建思路}
+
+本文不让神经网络直接输出整张高维拓扑密度图，而是让其预测低维截面参数或 NURBS 控制点坐标。原因包括：当前项目核心难点是拓扑结果到参数化几何的衔接，而非高维图像重建；高维密度图输出需要大量样本和复杂网络，当前阶段实现风险较高；后续设计、三维建模与再分析直接服务于参数化几何，而非原始密度图。
+
+数据集构建流程为：在多组工况和约束组合下批量运行 ANSYS 截面拓扑优化；对每组结果执行密度读取、截面投影、边界提取和 NURBS/B-spline 拟合；将每个样本转换为“输入参数--输出几何参数”对；完成归一化、训练/验证/测试划分与异常样本筛查。当前代码已经具备输出 \codepath{nurbs\_fit\_results.json}、\codepath{fit\_metrics.csv} 和运行清单的能力，后续可直接扩展为批量样本标签生成流程。
+
+\subsection{输入输出参数设计}
+
+结合涡轮盘截面问题与当前技术路线，网络输入可定义为
+\begin{equation}
+\mathbf{x}=[\omega,\;f_v,\;r_h,\;R_o,\;t_s,\;\sigma_{\mathrm{allow}},\;\Delta T,\;\eta,\;\cdots]^T,
+\end{equation}
+其中，$\omega$ 为角速度，$f_v$ 为体积分数约束，$r_h$ 为中心孔尺寸参数，$R_o$ 为外轮缘几何参数，$t_s$ 为设计域厚度或等效截面参数，$\sigma_{\mathrm{allow}}$ 为允许应力或工程筛选指标，$\Delta T$ 为温差或温度场特征量，$\eta$ 为后处理密度阈值。若基础算例暂不引入热载荷，则 $\Delta T$ 可置零或暂不纳入输入。
+
+为降低维度并提高工程可解释性，本文优先采用直接输出关键 NURBS/B-spline 控制点坐标集合的方案：
+\begin{equation}
+\mathbf{z}=[P_1^x,P_1^z,P_2^x,P_2^z,\cdots,P_m^x,P_m^z]^T.
+\end{equation}
+当前真实算例压缩后控制点数为 15，因此若固定控制点数和节点矢量，输出维度可初步设为 30。后续若采用多段曲线或放开权重，输出向量应相应增加段标识、权因子或局部几何参数。
+
+\subsection{MLP 回归模型与训练策略}
+
+本文主方案采用多层感知机回归网络：
+\begin{equation}
+\hat{\mathbf{z}}=\mathcal{F}_{\theta}(\mathbf{x}).
+\end{equation}
+网络结构建议为输入层、若干隐藏全连接层和输出层，隐藏层激活函数可采用 ReLU 或 GELU。针对当前阶段的工程可实现性，建议从 3--5 层全连接网络、64 或 128 隐藏维度起步。
+
+为避免不同量纲影响训练稳定性，采用标准化处理：
+\begin{equation}
+\mathbf{x}'=\frac{\mathbf{x}-\boldsymbol{\mu}_x}{\boldsymbol{\sigma}_x},\qquad
+\mathbf{z}'=\frac{\mathbf{z}-\boldsymbol{\mu}_z}{\boldsymbol{\sigma}_z}.
+\end{equation}
+
+考虑参数误差、几何误差和平滑约束，定义综合损失函数：
+\begin{equation}
+L=\lambda_p\|\hat{\mathbf{z}}-\mathbf{z}\|_2^2+
+\lambda_gD(\hat{\Gamma},\Gamma)^2+
+\lambda_s\sum_{i=2}^{m-1}\|\mathbf{P}_{i+1}-2\mathbf{P}_i+\mathbf{P}_{i-1}\|_2^2.
+\end{equation}
+式中，第一项为控制点或参数向量误差，第二项为重构几何与参考几何的轮廓距离，第三项为控制点二阶差分平滑项，用于抑制局部振荡。几何距离可采用平均最近点距离：
+\begin{equation}
+D(\hat{\Gamma},\Gamma)=\frac{1}{M}\sum_{k=1}^{M}d(\hat{\mathbf{q}}_k,\Gamma).
+\end{equation}
+
+\begin{table}[H]
+\centering
+\caption{神经网络训练参数建议}
+\begin{tabularx}{\textwidth}{p{0.32\textwidth}X}
+\toprule
+项目 & 建议初值或当前状态 \\
+\midrule
+模型类型 & MLP 回归 \\
+输入维度 & 随工况和约束参数数量确定 \\
+输出维度 & 固定 15 控制点时初步为 30 \\
+隐藏层结构 & 64--128--128--64 可作为起始结构 \\
+激活函数 & ReLU 或 GELU \\
+归一化方式 & z-score 标准化 \\
+优化器 & Adam \\
+初始学习率 & $1\times10^{-3}$ \\
+批量大小 & 32 \\
+训练轮数 & 300 起步，并启用早停 \\
+数据集划分 & 建议 70\%/15\%/15\% 或按工况分组留出 \\
+损失权重 & $\lambda_p,\lambda_g,\lambda_s$ 随验证集几何误差调节 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\placeholderfigure{工况/约束输入 $\rightarrow$ MLP 隐藏层 $\rightarrow$ 控制点/参数输出\newline $\rightarrow$ 几何重构 $\rightarrow$ 三维再分析评价}
+\caption{神经网络模型结构图}
+\end{figure}
+
+\subsection{评价指标与泛化验证}
+
+网络模型评估不能仅停留在参数均方误差上，而应面向工程结果进行三层评价。第一层为参数误差，比较预测控制点与参考控制点的 MAE、RMSE 和最大绝对误差；第二层为几何误差，比较预测轮廓与参考轮廓的平均距离、最大距离、Hausdorff 距离和面积偏差；第三层为再分析偏差，将预测几何生成三维盘体并重复有限元分析，比较其质量、最大等效应力和最大位移。
+
+质量、应力与位移偏差可定义为
+\begin{equation}
+\varepsilon_m=\frac{|m_{re}-m_{ref}|}{m_{ref}},\quad
+\varepsilon_{\sigma}=\frac{|\sigma^{\max}_{re}-\sigma^{\max}_{ref}|}{\sigma^{\max}_{ref}},\quad
+\varepsilon_u=\frac{|u^{\max}_{re}-u^{\max}_{ref}|}{u^{\max}_{ref}}.
+\end{equation}
+其中，下标 $re$ 表示重构或预测几何的再分析结果，下标 $ref$ 表示参考几何结果。
+
+\section{验证方案与阶段性结果讨论}
+
+\subsection{验证逻辑与对比对象}
+
+本文验证逻辑分为三步：第一步，比较拓扑优化结果阈值轮廓与 NURBS/B-spline 重构轮廓之间的几何一致性；第二步，在相同工况下对重构后的三维盘体进行有限元再分析，并与参考结果比较质量、最大等效应力和最大位移；第三步，比较神经网络预测几何与原始优化几何之间的参数偏差、轮廓偏差及再分析偏差。对应比较对象包括原始拓扑优化阈值轮廓、NURBS 参数化重构几何和神经网络预测几何。
+
+\begin{figure}[H]
+\centering
+\placeholderfigure{拓扑结果 $\rightarrow$ NURBS/B-spline 重构 $\rightarrow$ 三维旋转建模\newline $\rightarrow$ 网格划分 $\rightarrow$ 有限元求解 $\rightarrow$ 与参考结果对比}
+\caption{再分析验证流程图}
+\end{figure}
+
+\subsection{拓扑结果与重构几何一致性评价}
+
+当前已完成几何层面的真实算例验证。输入节点数与密度记录数均为 1050，聚合后截面点数为 673，阈值 $\eta=0.50$，采用 \codepath{tri\_iso} 提取一个有效外边界环。经弧长重采样后得到 449 个边界点，拟合曲线采用三次周期 B 样条，压缩后控制点数为 15。当前平均拟合误差为 0.3341 mm，最大拟合误差与 Hausdorff 误差均为 1.4429 mm，面积相对误差为 0.9908\%。该结果说明，经过控制点压缩后，重构曲线仍能在较低参数维度下保持主要几何面积和边界形状。
+
+需要注意的是，几何一致性不能完全替代力学一致性。若面积偏差较小但局部过渡区误差较大，仍可能在三维再分析中出现应力偏高。因此后续必须结合质量、应力、位移和关键圆角区域曲率进一步判断重构结果是否满足工程要求。
+
+\subsection{再分析结果对比框架}
+
+当前代码已具备 APDL polyline 宏、STEP/IGES 接口和旋转 STL 预览接口，但尚未形成完整 ANSYS 三维再分析闭环。因此，本文不填充虚假的质量、应力或位移结果，而以表7给出后续对比框架。待 CAD 实体导出和 ANSYS 求解回读完成后，可直接替换表中状态项。
+
+\begin{table}[H]
+\centering
+\caption{再分析结果对比框架}
+\begin{tabularx}{\textwidth}{p{0.28\textwidth}p{0.18\textwidth}p{0.20\textwidth}X}
+\toprule
+对比对象 & 质量 & 最大等效应力 & 最大位移与备注 \\
+\midrule
+原始拓扑结果对应参考模型 & 待回读 & 待回读 & 作为参考结果，需确定网格和材料设置 \\
+NURBS 重构三维模型 & 待回读 & 待回读 & 检查边界平滑对应力集中的影响 \\
+神经网络预测三维模型 & 待训练后回读 & 待训练后回读 & 仅在批量样本与网络训练完成后填写 \\
+质量偏差 $\varepsilon_m$ & 待计算 & -- & 相对参考模型 \\
+应力偏差 $\varepsilon_\sigma$ & -- & 待计算 & 相对参考模型 \\
+位移偏差 $\varepsilon_u$ & -- & -- & 待计算，相对参考模型 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{神经网络预测几何的误差分析框架}
+
+神经网络部分的误差分析应包括三个层次：参数层误差，统计控制点坐标或截面参数向量的 MAE、RMSE 和最大绝对误差；几何层误差，比较预测轮廓与参考轮廓的点集距离、面积偏差和关键位置偏差；物理层误差，通过再分析比较预测几何的质量、应力和位移偏差。当前尚未完成基于批量 ANSYS 样本的网络训练，因此本文不报告任何网络精度实测值，而只保留评价框架。
+
+后续实验应优先关注网络预测结果是否仍能保持正确几何拓扑关系，例如腹板是否断裂、轮缘是否过薄、中心孔过渡是否出现不合理尖角等。这些几何失真即便参数误差较小，也可能使预测结果失去工程意义。
+
+\subsection{误差来源局限性与工程适用性}
+
+本文误差来源主要包括：密度阈值敏感性，不同阈值会改变边界位置和薄肋厚度；截面投影与 Y 层聚合误差，三维密度场压缩到二维截面可能产生信息损失；边界闭合与有效性修复误差，设计域接触边界需要明确标记；曲线分段与控制点压缩误差，控制点数量减少会增加局部拟合误差；三维旋转建模与网格重建误差，边界平滑可能改变局部应力集中；神经网络样本覆盖不足，输入空间覆盖不充分会导致外推失效。
+
+本文方法更适合以下场景：已有明确二维轴对称截面设计域，且需要在多工况下重复求解；拓扑优化结果需要转化为可编辑截面而非仅作概念展示；希望在参数扫描、方案初筛与快速迭代中降低重复有限元代价。当前局限性主要体现在：真实 \codepath{mesh\_iso} 尚需 ANSYS 单元连接数据验证；STEP/IGES 实体导出尚需 CAD kernel 校核；神经网络尚未完成批量样本训练；本文基于二维轴对称截面展开，尚未覆盖更复杂的三维局部几何细节。
+
+\begin{table}[H]
+\centering
+\caption{方法优缺点总结}
+\begin{tabularx}{\textwidth}{p{0.22\textwidth}p{0.25\textwidth}p{0.25\textwidth}X}
+\toprule
+方法/阶段 & 优点 & 局限 & 适用角色 \\
+\midrule
+原始拓扑优化密度场 & 能直接反映载荷路径和材料分布趋势 & 不可直接编辑，灰区与锯齿边界明显 & 概念设计与载荷路径识别 \\
+边界提取与修复 & 能从密度场转化为显式轮廓 & 依赖阈值、闭合策略和单元/散点质量 & 拓扑结果工程化后处理 \\
+NURBS/B-spline 参数化重构 & 几何可编辑，便于三维建模与数据标签构建 & 依赖控制点数量、分段与拟合质量 & 优化结果参数化转换 \\
+神经网络快速预测 & 在线计算快，适合多工况初筛 & 依赖样本覆盖，需再分析校核 & 代理模型与快速设计 \\
+三维再分析 & 结果可用于工程校核 & 建模和计算成本较高 & 几何验证与最终评价 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section*{结论}
+\phantomsection
+\addcontentsline{toc}{section}{结论}
+
+本文围绕航空发动机涡轮盘二维轴对称截面的轻量化设计需求，形成了一套“拓扑优化--边界提取--NURBS 参数化重构--三维再分析接口--神经网络快速预测”的研究框架。结合当前真实算例与代码实现，可得到以下结论。
+
+第一，针对当前阶段的可实现性与 ANSYS 工程实现稳定性，采用体积分数约束下的最小柔顺度拓扑优化作为主线是合理的。该主线能够稳定给出主要载荷路径，并为后续几何重构提供清晰材料保留区域。
+
+第二，涡轮盘截面设计中的关键技术衔接点不是简单导出全部节点，而是拓扑边界轮廓提取与参数化重构。本文基于 $\rho=\eta$ 等值边界、截面投影、Y 层聚合、Delaunay 等值线提取、边界闭合修复和弧长重采样，建立了密度场到显式边界曲线的自动化流程。
+
+第三，NURBS/B-spline 适合用作涡轮盘截面的低维参数化表达。当前真实算例在 $\eta=0.50$ 下得到 673 个聚合截面点和 449 个重采样边界点，经三次周期 B 样条拟合和控制点压缩后，使用 15 个控制点即可获得平均误差 0.3341 mm、最大误差 1.4429 mm、面积相对误差 0.9908\% 的几何重构结果。
+
+第四，当前工程脚本已形成从 \codepath{NodeDensityTable} 到 \codepath{FitResult} 再到导出器的模块接口，并补充配置合并、运行清单、golden metrics 测试、APDL/STEP/IGES/STL 接口和论文图表自动导出命令。这为论文结果复现、后续 CAD 实体化和批量数据集生成奠定了基础。
+
+第五，神经网络在本文中的合理角色是代理模型与快速设计模型，而不是替代有限元拓扑优化。更适合当前项目的实现路径是以工况和约束参数为输入，以 NURBS 控制点或等价截面参数向量为输出的 MLP 回归框架；其有效性最终需要通过几何误差和有限元再分析误差共同验证。
+
+后续工作应优先完成四项任务：读取 ANSYS 单元连接数据并验证 \codepath{mesh\_iso}；输出工程级 STEP/IGES 实体并完成三维有限元再分析闭环；开展阈值、投影聚合策略和控制点数量敏感性分析；批量生成多工况样本并训练神经网络代理模型。
+
+% ==================== ⑧ 参考文献 ====================
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{参考文献}
+\begin{thebibliography}{99}
+
+\bibitem{Bendsoe1988}
+Bendsoe M P, Kikuchi N. Generating optimal topologies in structural design using a homogenization method[J]. Computer Methods in Applied Mechanics and Engineering, 1988, 71(2): 197--224.
+
+\bibitem{Bendsoe2003}
+Bendsoe M P, Sigmund O. Topology Optimization: Theory, Methods, and Applications[M]. Berlin Heidelberg: Springer, 2003.
+
+\bibitem{Sigmund2001}
+Sigmund O. A 99 line topology optimization code written in Matlab[J]. Structural and Multidisciplinary Optimization, 2001, 21(2): 120--127.
+
+\bibitem{Xia2018}
+Xia L, Xia Q, Huang X, Xie Y M. Bi-directional evolutionary structural optimization on advanced structures and materials: A comprehensive review[J]. Archives of Computational Methods in Engineering, 2018, 25(2): 437--478.
+
+\bibitem{Piegl1997}
+Piegl L, Tiller W. The NURBS Book[M]. 2nd ed. Berlin Heidelberg: Springer, 1997.
+
+\bibitem{Yan2023}
+Yan C, Liu C, Du H, Wang C, Yin Z. Topology optimization of turbine disk considering maximum stress prediction and constraints[J]. Chinese Journal of Aeronautics, 2023, 36(8): 182--206.
+
+\bibitem{Song2022}
+Song J, Zhang Y, Guo X, Gao H, Wen W, Cui H. Topology and shape optimization of twin-web turbine disk[J]. Structural and Multidisciplinary Optimization, 2022, 65: 44.
+
+\bibitem{Meng2024}
+Meng Z, Ren Y, Ding C, Mi D, Qian Z, Zhang L. Topology optimization of 3D turbine disk considering thermal load based on BESO method[J]. Journal of Aerospace Engineering, 2024, 37(5): 04024047.
+
+\bibitem{Wang2025}
+Wang Y, Li R, Liu X, Wang K. Topology optimization of disk--shaft rotating body under thermomechanical coupling[J]. Case Studies in Thermal Engineering, 2025, 73: 106585.
+
+\bibitem{Yan2025MM}
+Yan C, Guo H, Liu C, Mi D, Liu H, You Y. Multi-material topology optimization for dual-alloy turbine disk considering accurate stress prediction and control[J]. Chinese Journal of Mechanical Engineering, 2025, 38: 100086.
+
+\bibitem{Meng2023CN}
+孟子皓, 丁超, 任毅如, 等. 基于 BESO 算法的涡轮盘拓扑优化[J]. 力学与实践, 2023, 45(6): 1349--1354.
+
+\bibitem{Amroune2022}
+Amroune A, Cuilliere J C, Francois V. Automated lofting-based reconstruction of CAD models from 3D topology optimization results[J]. Computer-Aided Design, 2022, 145: 103183.
+
+\bibitem{Montemurro2021}
+Montemurro M, Refai K. A topology optimization method based on non-uniform rational basis spline hyper-surfaces for heat conduction problems[J]. Symmetry, 2021, 13(5): 888.
+
+\bibitem{Urso2024DDL}
+Urso E, Zerrouq S E, Montemurro M. A topology optimization method for problems with design-dependent loads based on non-uniform rational basis spline entities[J]. Mechanics of Advanced Materials and Structures, 2024, 31(28): 10671--10686.
+
+\bibitem{Urso2024TM}
+Urso E, Montemurro M. On thermomechanical problems in a topology optimisation method based on non-uniform rational basis spline entities[J]. Computers \& Structures, 2024, 305: 107530.
+
+\bibitem{Feng2025}
+Feng C, Li H, Gao L, Zhou Y. Automatic reconstruction of 3D topology optimization to editable CAD model with rotation minimizing frames[J]. Journal of Computational Design and Engineering, 2025, 12(9): 162--183.
+
+\bibitem{Woldseth2022}
+Woldseth R V, Aage N, Baerentzen J A, Sigmund O. On the use of artificial neural networks in topology optimisation[J]. Structural and Multidisciplinary Optimization, 2022, 65(10): 294.
+
+\bibitem{Shin2023}
+Shin S, Shin D, Kang N. Topology optimization via machine learning and deep learning: a review[J]. Journal of Computational Design and Engineering, 2023, 10(4): 1736--1766.
+
+\bibitem{Deng2022}
+Deng C, Wang Y, Qin C, Fu Y, Lu W. Self-directed online machine learning for topology optimization[J]. Nature Communications, 2022, 13: 388.
+
+\bibitem{Kong2024}
+Kong X, Wu Y, Zhu P, Zhi P, Yang Q. Novel artificial neural network aided structural topology optimization[J]. Applied Sciences, 2024, 14(23): 11416.
+
+\bibitem{Rastegarzadeh2023}
+Rastegarzadeh S, Wang J, Huang J. Neural network-assisted design: A study of multiscale topology optimization with smoothly graded cellular structures[J]. Journal of Mechanical Design, 2023, 145(1): 011701.
+
+\bibitem{Chandrasekhar2023}
+Chandrasekhar A, Sridhara S, Suresh K. Graded multiscale topology optimization using neural networks[J]. Advances in Engineering Software, 2023, 175: 103359.
+
+\bibitem{Persia2025}
+Persia J T, Sung M K, Lee S, Burns D E. Neural network-based surrogate model in postprocessing of topology optimized structures[J]. Neural Computing and Applications, 2025, 37(15): 8845--8867.
+
+\bibitem{Chen2001}
+Chen B C, Kikuchi N. Topology optimization with design-dependent loads[J]. Finite Elements in Analysis and Design, 2001, 37(1): 57--70.
+
+\bibitem{Bourdin2003}
+Bourdin B, Chambolle A. Design-dependent loads in topology optimization[J]. ESAIM: Control, Optimisation and Calculus of Variations, 2003, 9: 19--48.
+
+\bibitem{Han2021}
+Han Y, Xu B, Wang Q, Liu Y. Bi-directional evolutionary topology optimization of continuum structures subjected to inertial loads[J]. Advances in Engineering Software, 2021, 155: 102897.
+
+\bibitem{Chen2024review}
+陈小前, 张泽雨, 李昱, 姚雯, 周炜恩. 深度学习赋能结构拓扑优化设计方法研究[J]. 力学进展, 2024, 54(2): 213--258.
+
+\bibitem{Zhang2025review}
+张磊, 寇若阳, 岳志斌, 等. 面向轻量化结构设计的连续体拓扑优化研究进展[J]. 西北工业大学学报, 2025, 43(4): 702--722.
+
+\bibitem{Jin2024}
+金栢成, 田阔, 黄蕾. 曲面加筋结构拓扑优化结果参数化重构方法[J]. 航空学报, 2024, 45(24): 630586.
+
+\bibitem{Zhuang2022}
+Zhuang C, Xiong Z, Ding H. Bezier extraction based isogeometric topology optimization with a locally-adaptive smoothed density model[J]. Journal of Computational Physics, 2022, 468: 111469.
+
+\bibitem{Allaire2002}
+Allaire G, Jouve F, Toader A M. A level-set method for shape optimization[J]. Comptes Rendus Mathematique, 2002, 334(12): 1125--1130.
+
+\bibitem{Ren2025}
+Ren H, Xia B, Wang W, Chen X, Liu Y, Zhou P, Du J. AMRTO: Automated CAD model reconstruction of topology optimization result[J]. Computer Methods in Applied Mechanics and Engineering, 2025, 435: 117673.
+
+\end{thebibliography}
+
+% ==================== ⑨ 附录 ====================
+\appendix
+
+\section{关键公式与变量说明}
+
+\subsection{拓扑优化主模型}
+
+体积分数约束下的最小柔顺度模型为
+\[
+\min_{\rho}\;\mathbf{U}^{T}\mathbf{K}(\tilde{\rho})\mathbf{U}
+\]
+\[
+\mathbf{K}(\tilde{\rho})\mathbf{U}=\mathbf{F}_c(\tilde{\rho},\omega)+\mathbf{F}_{ext}+\mathbf{F}_T
+\]
+\[
+\frac{\sum_{e=1}^{n}\rho_e v_e}{\sum_{e=1}^{n}v_e}\le f_v,
+\qquad
+\rho_{\min}\le\rho_e\le1.
+\]
+
+\subsection{边界提取与几何误差}
+
+\[
+\Omega_s=\{\mathbf{x}\in\Omega\mid\rho(\mathbf{x})\ge\eta\},\qquad
+\Gamma_\eta=\{\mathbf{x}\in\Omega\mid\rho(\mathbf{x})=\eta\}.
+\]
+\[
+e_{\mathrm{avg}}=\frac{1}{M}\sum_{k=1}^{M}\|\mathbf{q}_k-\hat{\mathbf{q}}_k\|_2,
+\qquad
+e_{\max}=\max_k\|\mathbf{q}_k-\hat{\mathbf{q}}_k\|_2.
+\]
+\[
+\delta_A=\frac{|A_{\mathrm{fit}}-A_{\mathrm{topo}}|}{A_{\mathrm{topo}}}.
+\]
+
+\subsection{神经网络损失函数}
+
+\[
+L=\lambda_p\|\hat{\mathbf{z}}-\mathbf{z}\|_2^2+
+\lambda_gD(\hat{\Gamma},\Gamma)^2+
+\lambda_s\sum_{i=2}^{m-1}\|\mathbf{P}_{i+1}-2\mathbf{P}_i+\mathbf{P}_{i-1}\|_2^2.
+\]
+
+\section{算法流程伪代码}
+
+\subsection{拓扑结果边界提取与 NURBS 重构}
+
+输入：ANSYS 导出的节点坐标表、节点拓扑密度表、密度阈值 $\eta$。
+
+输出：边界环、控制点集合、节点矢量、权重、拟合误差和重构截面曲线。
+
+\noindent Step 1：读取 \codepath{NLIST.lis} 与密度导出文件，按 \codepath{node\_id} 合并数据；
+
+\noindent Step 2：统一坐标单位，将三维节点投影到 X--Z 截面；
+
+\noindent Step 3：对多 Y 层密度进行 max、mean 或 median 聚合，当前采用 max；
+
+\noindent Step 4：在散点或网格上提取 $\rho=\eta$ 等值线；
+
+\noindent Step 5：对设计域接触边界进行闭合，并为闭合段打标签；
+
+\noindent Step 6：执行 polygonize、有效性修复、连通域过滤和方向统一；
+
+\noindent Step 7：按弧长重采样并识别角点或高曲率段；
+
+\noindent Step 8：采用 periodic 或 segmented 模式进行三次 B-spline/NURBS 拟合；
+
+\noindent Step 9：计算平均误差、最大误差、Hausdorff 误差和面积误差；
+
+\noindent Step 10：输出 JSON、CSV、APDL/CAD 接口文件和论文图表。
+
+\subsection{神经网络辅助快速设计}
+
+输入：工况/约束参数样本集 $\{\mathbf{x}_i\}$，对应几何参数集 $\{\mathbf{z}_i\}$。
+
+输出：训练后的 MLP 模型 $\mathcal{F}_{\theta}$。
+
+\noindent Step 1：批量生成 ANSYS 拓扑优化样本并执行 NURBS 参数化重构；
+
+\noindent Step 2：筛除异常几何、断裂边界或拟合误差超限样本；
+
+\noindent Step 3：对输入参数与输出控制点执行标准化；
+
+\noindent Step 4：划分训练集、验证集和测试集；
+
+\noindent Step 5：初始化 MLP 网络参数；
+
+\noindent Step 6：计算参数误差、几何误差和平滑损失并反向传播；
+
+\noindent Step 7：在验证集上监测损失并执行早停；
+
+\noindent Step 8：在测试集上评价参数误差、几何误差与再分析偏差；
+
+\noindent Step 9：保存模型、归一化参数和预测几何结果。
+
+\section{软件模块与输出文件说明}
+
+\begin{table}[H]
+\centering
+\caption{后处理代码模块与功能}
+\begin{tabularx}{\textwidth}{p{0.28\textwidth}X}
+\toprule
+模块 & 功能 \\
+\midrule
+\codepath{io/ansys.py} & 解析节点坐标和拓扑密度导出文件 \\
+\codepath{preprocess/projection.py} & 完成 X--Z 投影、单位转换和 Y 层聚合 \\
+\codepath{boundary/iso.py} & 实现 \codepath{tri\_iso}、\codepath{grid\_iso} 和 \codepath{mesh\_iso} 接口 \\
+\codepath{boundary/postprocess.py} & 完成闭合、有效性修复、排序、重采样与分段 \\
+\codepath{nurbs/fitting.py} & 实现 periodic 和 segmented B-spline/NURBS 拟合 \\
+\codepath{validation/metrics.py} & 计算平均误差、最大误差、Hausdorff 误差和面积误差 \\
+\codepath{exporters/files.py} & 输出 JSON、CSV、APDL、STEP/IGES 接口和 STL 预览 \\
+\codepath{thesis\_report.py} & 导出论文表格、阈值扫描表和 PNG/SVG 图 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+当前推荐输出目录结构为
+\begin{verbatim}
+outputs/{case_id}/{run_name}/
+  tables/
+  geometry/
+  figures/
+  cad/
+  logs/
+  config_resolved.yaml
+  run_manifest.json
+\end{verbatim}
+其中，\codepath{config\_resolved.yaml} 用于记录默认配置与 case 配置合并后的最终参数，\codepath{run\_manifest.json} 用于记录输入文件、输出文件、运行时间、算法版本和关键指标。
+
+\end{document}

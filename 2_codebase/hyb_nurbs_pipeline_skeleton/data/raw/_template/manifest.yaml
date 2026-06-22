@@ -1,0 +1,15 @@
+case_id: hyb_####_short_name
+source: ansys
+node_file: NLIST.lis
+density_file: export1.txt
+element_file: null
+node_count_expected: null
+density_count_expected: null
+length_unit: m
+working_length_unit: mm
+density_field: topology_density
+exported_at: null
+imported_at: null
+owner: null
+public_release: false
+notes: Replace this template with case-specific provenance.

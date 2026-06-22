@@ -1,0 +1,3 @@
+sample_id,run_dir,used,skipped_reason,missing_fields,rpm,omega,volume_fraction,Ri,Ro,B,h_hub,h_rim,r_min,eta,n_control_points,degree,is_missing_rpm,is_missing_omega,is_missing_volume_fraction,is_missing_Ri,is_missing_Ro,is_missing_B,is_missing_h_hub,is_missing_h_rim,is_missing_r_min,is_missing_eta,is_missing_n_control_points,is_missing_degree
+hyb_current_actual/run_manual_eta050_tri_iso,D:\Project\1-NetrualDisk\Latest\outputs\hyb_current_actual\run_manual_eta050_tri_iso,True,,rpm;omega;volume_fraction;Ri;Ro;B;h_hub;h_rim;r_min,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.5,15.0,3.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,0.0
+run_001,D:\Project\1-NetrualDisk\Latest\outputs\run_001,False,required_control_points=15 not found,,,,,,,,,,,,,,,,,,,,,,,,,

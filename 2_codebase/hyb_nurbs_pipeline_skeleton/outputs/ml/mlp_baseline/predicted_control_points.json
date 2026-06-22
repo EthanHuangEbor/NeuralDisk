@@ -1,0 +1,95 @@
+{
+  "input_features": {
+    "rpm": 12000.0,
+    "omega": 1256.6370849609375,
+    "volume_fraction": 0.5,
+    "Ri": 32.0,
+    "Ro": 168.0,
+    "B": 46.0,
+    "h_hub": 8.0,
+    "h_rim": 10.0,
+    "r_min": 2.5,
+    "eta": 0.5,
+    "n_control_points": 15.0,
+    "degree": 3.0,
+    "is_missing_rpm": 0.0,
+    "is_missing_omega": 0.0,
+    "is_missing_volume_fraction": 0.0,
+    "is_missing_Ri": 0.0,
+    "is_missing_Ro": 0.0,
+    "is_missing_B": 0.0,
+    "is_missing_h_hub": 0.0,
+    "is_missing_h_rim": 0.0,
+    "is_missing_r_min": 0.0,
+    "is_missing_eta": 0.0,
+    "is_missing_n_control_points": 0.0,
+    "is_missing_degree": 0.0
+  },
+  "predicted_control_points": [
+    [
+      13.744712829589844,
+      2.6501283645629883
+    ],
+    [
+      -36.12392807006836,
+      -1.1109471321105957
+    ],
+    [
+      67.25226593017578,
+      -3.4044933319091797
+    ],
+    [
+      49.15201950073242,
+      10.350768089294434
+    ],
+    [
+      -15.274924278259277,
+      5.592182159423828
+    ],
+    [
+      42.4149055480957,
+      84.81400299072266
+    ],
+    [
+      26.33919906616211,
+      -27.610557556152344
+    ],
+    [
+      -14.857542037963867,
+      -14.329156875610352
+    ],
+    [
+      -38.98291778564453,
+      50.69856262207031
+    ],
+    [
+      -24.22330665588379,
+      -0.42255401611328125
+    ],
+    [
+      46.324710845947266,
+      -11.915603637695312
+    ],
+    [
+      35.55386734008789,
+      -8.890803337097168
+    ],
+    [
+      27.90642547607422,
+      26.687828063964844
+    ],
+    [
+      -65.51316833496094,
+      66.19420623779297
+    ],
+    [
+      -44.293678283691406,
+      29.72541046142578
+    ]
+  ],
+  "target_format": "15_control_points_2d",
+  "model_path": "outputs/ml/mlp_baseline/model.pt",
+  "normalizer_path": "outputs/ml/mlp_baseline/normalizer.json",
+  "created_at": "2026-06-13T01:22:36.717526+00:00",
+  "warning": "Model was trained in smoke-test/small-data mode and must not be used as a formal design result."
+}

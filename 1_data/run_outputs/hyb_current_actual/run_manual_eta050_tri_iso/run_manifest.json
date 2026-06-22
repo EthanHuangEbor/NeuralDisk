@@ -1,0 +1,52 @@
+{
+  "case_id": "hyb_current_actual",
+  "run_name": "run_manual_eta050_tri_iso",
+  "status": "ok",
+  "created_at": "2026-05-08T03:07:38.912587+00:00",
+  "input_files": {
+    "node_file": "D:\\Project\\3-NetrualDisk\\Latest\\NLIST.lis",
+    "density_file": "D:\\Project\\3-NetrualDisk\\Latest\\export1.txt",
+    "element_file": null
+  },
+  "counts": {
+    "nodes": 1050,
+    "section_points": 673,
+    "boundary_loops": 1,
+    "fit_results": 1
+  },
+  "parameters": {
+    "eta": 0.5,
+    "projection": {
+      "axes": [
+        "x",
+        "z"
+      ],
+      "mode": "aggregate",
+      "aggregate_density": "max"
+    },
+    "boundary_method": "tri_iso",
+    "degree": 3,
+    "closed_loop_mode": "periodic",
+    "weights_mode": "fixed_ones"
+  },
+  "metrics": [
+    {
+      "component_id": 0,
+      "role": "outer",
+      "mean_error_mm": 0.3340735324973518,
+      "max_error_mm": 1.4429331087955444,
+      "hausdorff_error_mm": 1.4429331087955444,
+      "area_error_ratio": 0.009907860900371561,
+      "n_control_points": 15
+    }
+  ],
+  "environment": {
+    "python": "3.11.6",
+    "platform": "Windows-10-10.0.26200-SP0"
+  },
+  "config": {
+    "config_path": "D:\\Project\\3-NetrualDisk\\Latest\\hyb_nurbs_pipeline_skeleton\\configs\\cases\\hyb_current_actual.yaml",
+    "default_config_path": "D:\\Project\\3-NetrualDisk\\Latest\\hyb_nurbs_pipeline_skeleton\\configs\\default.yaml",
+    "resolved_at": "2026-05-08T03:07:36.468815+00:00"
+  }
+}

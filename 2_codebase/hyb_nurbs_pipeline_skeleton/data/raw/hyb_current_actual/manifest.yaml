@@ -1,0 +1,14 @@
+case_id: hyb_current_actual
+source: ansys
+node_file: NLIST.lis
+density_file: export1.txt
+node_count_expected: 1050
+density_count_expected: 1050
+length_unit: m
+working_length_unit: mm
+density_field: topology_density
+exported_at: null
+imported_at: 2026-06-17
+owner: project-local
+public_release: true
+notes: Current real HYB topology-density export used as the regression baseline.

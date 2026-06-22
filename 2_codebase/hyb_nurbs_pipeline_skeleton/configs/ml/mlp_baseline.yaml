@@ -1,0 +1,13 @@
+seed: 42
+hidden_dims: [64, 128, 128, 64]
+activation: relu
+dropout: 0.0
+learning_rate: 0.001
+weight_decay: 0.0
+batch_size: 32
+epochs: 300
+patience: 30
+lambda_mse: 1.0
+lambda_smooth: 0.001
+split_ratio: [0.70, 0.15, 0.15]
+required_control_points: 15
